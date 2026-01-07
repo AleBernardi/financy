@@ -5,12 +5,14 @@ import { buildSchema } from 'type-graphql'
 import { expressMiddleware } from '@as-integrations/express5'
 import { AuthResolver } from './resolvers/auth.resolver'
 import { UserResolver } from './resolvers/user.resolver'
+import { buildContext } from './graphql/context'
+import { CategoryResolver } from './resolvers/category.resolver'
 
 async function main() {
     const app = express()
 
     const schema = await buildSchema({
-        resolvers: [AuthResolver, UserResolver],
+        resolvers: [AuthResolver, UserResolver, CategoryResolver],
         validate: false,
         emitSchemaFile: './schema.graphql'
     })
@@ -24,7 +26,9 @@ async function main() {
     app.use(
         '/graphql',
         express.json(),
-        expressMiddleware(server)
+        expressMiddleware(server, {
+            context: buildContext,
+        })
     )
 
     app.listen({
