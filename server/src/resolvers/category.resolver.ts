@@ -3,7 +3,7 @@ import { GqlUser } from "@/graphql/decorators/user.decorator";
 import { IsAuth } from "@/middlewares/auth.middleware";
 import { CategoryModel } from "@/models/category.model";
 import { UserModel } from "@/models/user.model";
-import { CategoryService } from "@/services/coregoty.service";
+import { CategoryService } from "@/services/category.service";
 import { UserService } from "@/services/user.service";
 import { User } from "@prisma/client";
 import { Arg, FieldResolver, Mutation, Query, Resolver, Root, UseMiddleware } from "type-graphql";

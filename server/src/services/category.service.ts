@@ -3,6 +3,18 @@ import { prismaClient } from "../../prisma/prisma";
 
 
 export class CategoryService {
+    async findCategory(id: string) {
+        const category = await prismaClient.category.findUnique({
+            where: {
+                id
+            }
+        });
+
+        if(!category) throw new Error("Categoria não encontrada!");
+    
+        return category;
+    }
+
     async createCategory(data: CreateCategoryInput, userId: string){
         return prismaClient.category.create({
             data: {
