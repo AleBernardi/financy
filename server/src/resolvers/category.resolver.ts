@@ -46,7 +46,7 @@ export class CategoryResolver {
     async listCategories(
         @GqlUser() user: User
     ): Promise<CategoryModel[]>{
-        return this.categoryService.listCategories(user.id);
+        return this.categoryService.listCategoriesByUser(user.id);
     }
 
     @FieldResolver(() => UserModel)

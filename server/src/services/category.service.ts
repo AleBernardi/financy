@@ -67,7 +67,7 @@ export class CategoryService {
         })
     }
 
-    async listCategories(userId: string){
+    async listCategoriesByUser(userId: string){
         return prismaClient.category.findMany({
             where: {
                 userId
