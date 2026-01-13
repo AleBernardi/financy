@@ -140,7 +140,7 @@ export function CreateCategoryDialog({
                             onClick={() => onOpenChange(false)}
                             className="flex h-7 w-7 items-center justify-center rounded-md border border-gray-300 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
                         >
-                            <X className="h-3 w-3" />
+                            <X className="h-4 w-4" />
                         </button>
                     </div>
                 </DialogHeader>
