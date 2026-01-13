@@ -13,7 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { Mail, UserRoundPlus } from "lucide-react";
 
-import { InputIcon } from "@/components/InputIcon";
+import { InputComponent } from "@/components/Input";
 import { PasswordInput } from "@/components/PasswordInput";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "@/stores/auth";
@@ -63,7 +63,7 @@ export function Login() {
 
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <InputIcon
+                        <InputComponent
                             id="email"
                             type="email"
                             placeholder="mail@example.com"

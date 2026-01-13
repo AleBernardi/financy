@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 import { LogIn, Mail, UserRound } from "lucide-react";
 
-import { InputIcon } from "@/components/InputIcon";
+import { InputComponent } from "@/components/Input";
 import { PasswordInput } from "@/components/PasswordInput";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "@/stores/auth";
@@ -28,11 +28,6 @@ export function SignUp() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        console.log({
-            name,
-            email,
-            password,
-        });
 
         try {
             const signUpMutate = await signUp({
@@ -67,7 +62,7 @@ export function SignUp() {
 
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <InputIcon
+                        <InputComponent
                             id="name"
                             type="text"
                             placeholder="Seu nome completo"
@@ -77,7 +72,7 @@ export function SignUp() {
                             icon={UserRound}
                             label="Nome completo"
                         />
-                        <InputIcon
+                        <InputComponent
                             id="email"
                             type="email"
                             placeholder="mail@example.com"
