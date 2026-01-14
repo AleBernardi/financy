@@ -10,21 +10,40 @@ import type { Category } from "@/types";
 import { SummaryCard } from "./components/SummaryCard";
 import { CategoryCard } from "./components/CategoryCard";
 import { colorMap, iconMap } from "@/lib/utils";
+import { UpdateCategoryDialog } from "./components/UpdateCategoryDialog";
+import { DeleteCategoryDialog } from "./components/DeleteCategoryDialog";
 
 
 export function Categories() {
 
-    const [openDialog, setOpenDioalog] = useState(false);
     const { data, loading, refetch } = useQuery<{ listCategories: Category[] }>(LIST_CATEGORIES);
+    const [isNewOpen, setIsNewOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false)
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
     const categories = data?.listCategories || [];
-
-    console.log(categories);
 
     const totalTransactions = categories.reduce((acc, cat) => acc + (cat.countTransactions || 0), 0);
     const mostUsed = [...categories].sort((a, b) => (b.countTransactions || 0) - (a.countTransactions || 0))[0];
 
     const MostUsedIcon = (mostUsed ? iconMap[mostUsed.icon] : Tag) as LucideIcon;
     const mostUsedColors = mostUsed ? colorMap[mostUsed.color] : { icon: "#6366f1", background: "#f5f3ff" };
+
+    const handleEditClick = (category: Category) => {
+        setIsEditOpen(false);
+        setSelectedCategory(null);
+
+        setSelectedCategory(category);
+        setIsEditOpen(true);
+    };
+
+    const handleDeleteClick = (category: Category) => {
+        setIsDeleteOpen(false);
+        setSelectedCategory(null);
+
+        setSelectedCategory(category);
+        setIsDeleteOpen(true);
+    };
 
     return (
         <Page>
@@ -40,7 +59,7 @@ export function Categories() {
                     </div>
                     <div>
                         <Button
-                            onClick={() => { setOpenDioalog(true) }}
+                            onClick={() => { setIsNewOpen(true) }}
                             className="w-full"
                         >
                             <Plus className="h-4 w-4" />
@@ -86,12 +105,16 @@ export function Categories() {
                                 iconName={category.icon}
                                 colorName={category.color}
                                 count={category.countTransactions || 0}
+                                onDelete={() => handleDeleteClick(category)}
+                                onEdit={() => handleEditClick(category)}
                             />
                         ))}
                     </div>
                 </div>
             </div>
-            <CreateCategoryDialog open={openDialog} onOpenChange={setOpenDioalog} />
+            <CreateCategoryDialog open={isNewOpen} onOpenChange={setIsNewOpen} />
+            <UpdateCategoryDialog open={isEditOpen} onOpenChange={setIsEditOpen} category={selectedCategory} />
+            <DeleteCategoryDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen} category={selectedCategory} />
         </Page>
     )
 }

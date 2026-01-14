@@ -21,22 +21,22 @@ type RegisterMutationData = {
     }
 }
 
-interface AuthSate {
+interface AuthState {
     user: User | null
     token: string | null
     isAuthenticated: boolean
     login: (data: LoginInput) => Promise<boolean>
     signUp: (data: RegisterInput) => Promise<boolean>
     logout: () => void
+    updateUser: (userData: Partial<User>) => void
 }
 
-export const useAuthStore = create<AuthSate>() (
+export const useAuthStore = create<AuthState>() (
     persist(
         (set) => ({
             user: null,
             token: null,
             isAuthenticated: false,
-
             login: async (loginData: LoginInput) => {
                 try {
                     const { data } = await apolloClient.mutate<LoginMutationData, {data: LoginInput}>({
@@ -103,6 +103,11 @@ export const useAuthStore = create<AuthSate>() (
                     console.log("Erro ao fazer o cadastro!")
                     throw error
                 }
+            },
+            updateUser: (userData) => {
+                set((state) => ({
+                    user: state.user ? { ...state.user, ...userData } : null
+                }));
             },
             logout: () => {
                 set({ 

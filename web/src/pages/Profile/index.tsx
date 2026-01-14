@@ -16,6 +16,7 @@ import { UPDATE_USER } from "@/lib/graphql/mutations/User";
 export function Profile() {
     const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
+    const updateStoreUser = useAuthStore((state) => state.updateUser)
 
     const [name, setName] = useState(user?.name || "");
 
@@ -26,8 +27,13 @@ export function Profile() {
     };
 
     const [updateUser, { loading }] = useMutation(UPDATE_USER, {
-        onCompleted() {
-            toast.success("Perfil atualizado com sucesso!")
+        onCompleted(data: any) {
+            if (data?.updateUser) {
+                updateStoreUser({
+                    name: data.updateUser.name
+                });
+            }
+            toast.success("Perfil atualizado com sucesso!");
         },
         onError() {
             toast.error("Falha ao atualizar o perfil!")

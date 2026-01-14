@@ -4,7 +4,7 @@ import { iconMap, colorMap } from "@/lib/utils";
 
 interface CategoryCardProps {
     title: string;
-    description?: string | null; // Aceita null vindo do GraphQL
+    description?: string | null;
     iconName: string;
     colorName: string;
     count: number;
@@ -22,29 +22,25 @@ export function CategoryCard({
     onDelete,
 }: CategoryCardProps) {
 
-    // 1. Busca o ícone no mapa pelo nome (string)
-    // Se não encontrar, usa o ícone 'Tag' como padrão
     const Icon = (iconMap[iconName] as LucideIcon) || Tag;
 
-    // 2. Busca as cores no colorMap pelo nome (ex: 'green')
-    // Se não encontrar, usa um cinza padrão
     const colorScheme = colorMap[colorName] || {
         icon: "#64748B",
         background: "#F1F5F9",
     };
 
     return (
-        <div className="flex flex-col justify-between rounded-xl border bg-white p-6 shadow-sm transition-all hover:shadow-md">
-            <div className="space-y-4">
+        <div className="flex flex-col gap-5 justify-between rounded-xl border bg-white p-6 shadow-sm transition-all hover:shadow-md">
+            <div>
                 <div className="flex items-start justify-between">
                     <div
-                        className="rounded-lg p-2.5"
+                        className="rounded-lg p-3"
                         style={{
                             backgroundColor: colorScheme.background,
                             color: colorScheme.icon
                         }}
                     >
-                        <Icon className="h-5 w-5" />
+                        <Icon className="h-4 w-4" />
                     </div>
 
                     <div className="flex gap-1">
@@ -67,6 +63,8 @@ export function CategoryCard({
                     </div>
                 </div>
 
+            </div>
+            <div>
                 <div>
                     <h3 className="text-lg font-bold text-slate-900">{title}</h3>
                     <p className="text-sm text-slate-500 line-clamp-2 min-h-[40px]">
@@ -75,7 +73,6 @@ export function CategoryCard({
                 </div>
             </div>
 
-            {/* Footer do Card: Badge da categoria e contador */}
             <div className="mt-6 flex items-center justify-between">
                 <span
                     className="rounded-full px-3 py-1 text-xs font-bold"
