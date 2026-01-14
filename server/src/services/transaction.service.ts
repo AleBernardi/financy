@@ -65,4 +65,20 @@ export class TransactionService {
             }
         })
     }
+
+    async listTransactionsByCategory(categoryId: string){
+        return prismaClient.transaction.findMany({
+            where: {
+                categoryId
+            }
+        })
+    }
+
+    async countTransactions(categoryId: string){
+        return prismaClient.transaction.count({
+            where: {
+                categoryId
+            }
+        })
+    }
 }

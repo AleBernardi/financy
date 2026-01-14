@@ -20,6 +20,10 @@ export default {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       colors: {
+        brand: {
+          base: "hsl(var(--brand-base))",
+          dark: "hsl(var(--brand-dark))"
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

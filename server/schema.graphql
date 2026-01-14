@@ -5,11 +5,13 @@
 
 type CategoryModel {
   color: String!
+  countTransactions: Float
   createdAt: DateTimeISO!
   description: String
   icon: String!
   id: ID!
   title: String!
+  transactions: [TransactionModel!]
   updatedAt: DateTimeISO!
   user: UserModel
   userId: String!
@@ -55,6 +57,7 @@ type Mutation {
   register(data: RegisterInput!): RegisterOutput!
   updateCategory(data: UpdateCategoryInput!, id: String!): CategoryModel!
   updateTransaction(data: UpdateTransactionInput!, id: String!): TransactionModel!
+  updateUser(data: UpdateUserInput!): UserModel!
 }
 
 type Query {
@@ -108,6 +111,10 @@ input UpdateTransactionInput {
   description: String
   type: TransactionType
   value: Float
+}
+
+input UpdateUserInput {
+  name: String!
 }
 
 type UserModel {

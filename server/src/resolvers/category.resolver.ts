@@ -2,8 +2,10 @@ import { CreateCategoryInput, UpdateCategoryInput } from "@/dtos/input/category.
 import { GqlUser } from "@/graphql/decorators/user.decorator";
 import { IsAuth } from "@/middlewares/auth.middleware";
 import { CategoryModel } from "@/models/category.model";
+import { TransactionModel } from "@/models/transaction.model";
 import { UserModel } from "@/models/user.model";
 import { CategoryService } from "@/services/category.service";
+import { TransactionService } from "@/services/transaction.service";
 import { UserService } from "@/services/user.service";
 import { User } from "@prisma/client";
 import { Arg, FieldResolver, Mutation, Query, Resolver, Root, UseMiddleware } from "type-graphql";
@@ -13,7 +15,8 @@ import { Arg, FieldResolver, Mutation, Query, Resolver, Root, UseMiddleware } fr
 @UseMiddleware(IsAuth)
 export class CategoryResolver {
     private categoryService = new CategoryService();
-        private userService = new UserService();
+    private userService = new UserService();
+    private transactionService = new TransactionService();
 
     @Mutation(() => CategoryModel)
     async createCategory(
@@ -54,4 +57,14 @@ export class CategoryResolver {
 
         return this.userService.findUser(category.userId);
     }
+
+    @FieldResolver(() => [TransactionModel])
+    async transactions(@Root() category: CategoryModel): Promise<TransactionModel[]> {
+        return this.transactionService.listTransactionsByCategory(category.id)
+    }
+
+  @FieldResolver(() => Number)
+  async countTransactions(@Root() category: CategoryModel): Promise<number> {
+    return this.transactionService.countTransactions(category.id)
+  }
 }

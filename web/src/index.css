@@ -6,6 +6,8 @@
 
 @layer base {
   :root {
+    --brand-base: 146 56% 28%;
+    --brand-dark: 146 61% 18%;
     --background: 0 0% 100%;
     --foreground: 215 28% 17%;
     --card: 0 0% 100%;
@@ -28,9 +30,6 @@
     --radius: 0.5rem;
 
     --placeholder: 218 11% 65%;
-
-    --brand-dark: 18 75% 23%;
-    --brand-base: 152 55% 28%;
 
     --danger: 0 84% 60%;
     --success: 152 60% 39%;
