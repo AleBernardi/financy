@@ -9,9 +9,9 @@ export const CREATE_CATEGORY = gql`
             icon
             color
             user {
-            id
-            name
-            email
+                id
+                name
+                email
             }
             createdAt
             updatedAt

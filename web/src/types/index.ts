@@ -1,3 +1,5 @@
+import type { TransactionType } from "./enums"
+
 export interface User {
     id: string
     name: string
@@ -26,6 +28,20 @@ export interface Category {
     userId: string
     user: User
     countTransactions?: number
+    createdAt: string
+    updatedAt?: string | null
+}
+
+export interface Transaction {
+    id: string
+    description?: string | null
+    type: TransactionType
+    date: string
+    value: number
+    userId: string
+    user: User
+    categoryId: string
+    category: Category
     createdAt: string
     updatedAt?: string | null
 }

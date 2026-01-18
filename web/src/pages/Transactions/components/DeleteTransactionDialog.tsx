@@ -8,43 +8,43 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useMutation } from "@apollo/client/react"
-import { DELETE_CATEGORY } from "@/lib/graphql/mutations/Category"
 import { toast } from "sonner"
-import type { Category } from "@/types"
+import type { Transaction } from "@/types"
 import { AlertTriangle, X } from "lucide-react"
+import { DELETE_TRANSACTION } from "@/lib/graphql/mutations/Transaction"
 
-interface DeleteCategoryDialogProps {
+interface DeleteTransactionDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
-    category: Category | null
+    transaction: Transaction | null
 }
 
-export function DeleteCategoryDialog({
+export function DeleteTransactionDialog({
     open,
     onOpenChange,
-    category,
-}: DeleteCategoryDialogProps) {
+    transaction,
+}: DeleteTransactionDialogProps) {
 
-    const [deleteCategory, { loading }] = useMutation(DELETE_CATEGORY, {
+    const [deleteTransaction, { loading }] = useMutation(DELETE_TRANSACTION, {
         onCompleted() {
-            toast.success("Categoria removida com sucesso!")
+            toast.success("Transação removida com sucesso!")
             onOpenChange(false)
         },
         onError(error) {
-            toast.error(error.message || "Falha ao remover a categoria!")
+            toast.error(error.message || "Falha ao remover a transação!")
         },
-        refetchQueries: ["ListCategories"]
+        refetchQueries: ["ListTransactions"]
     })
 
     const handleDelete = () => {
-        if (!category?.id) {
-            toast.error("ID da categoria não encontrado.")
+        if (!transaction?.id) {
+            toast.error("ID da transação não encontrado.")
             return
         }
 
-        deleteCategory({
+        deleteTransaction({
             variables: {
-                id: category.id,
+                id: transaction.id,
             },
         })
     }
@@ -67,11 +67,11 @@ export function DeleteCategoryDialog({
                     </div>
 
                     <div className="space-y-1">
-                        <DialogTitle className="text-xl text-gray-700">Remover categoria</DialogTitle>
+                        <DialogTitle className="text-xl text-gray-700">Remover transação</DialogTitle>
                         <DialogDescription asChild>
                             <div className="flex flex-col gap-1">
                                 <span className="text-base block">
-                                    Realmente deseja remover a categoria <span className="font-bold text-gray-700">"{category?.title}"</span>?
+                                    Realmente deseja remover a transação?
                                 </span>
                                 <span className="text-sm text-muted-foreground block">
                                     Esta ação não pode ser desfeita.

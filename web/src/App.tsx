@@ -6,6 +6,7 @@ import { PublicRoutes } from './routes/PublicRoutes'
 import { Categories } from '@/pages/Categories/Index'
 import { ProtectedRoutes } from './routes/ProtectedRoutes'
 import { Profile } from './pages/Profile'
+import { Transactions } from './pages/Transactions/Index'
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
 
         <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<Navigate to="/categories" replace />} />
+          <Route path='/transactions' element={<Transactions />} />
           <Route path='/categories' element={<Categories />} />
           <Route path='/profile' element={<Profile />} />
         </Route>

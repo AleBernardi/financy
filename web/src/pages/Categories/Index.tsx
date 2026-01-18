@@ -1,8 +1,7 @@
 import { Page } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { ArrowUpDown, Plus, Tag, Utensils, type LucideIcon } from "lucide-react";
-import { CreateCategoryDialog } from "./components/CreateCategoryDialog"
+import { ArrowUpDown, Plus, Tag, type LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { useQuery } from "@apollo/client/react"
 import { LIST_CATEGORIES } from "@/lib/graphql/queries/Categories";
@@ -10,13 +9,14 @@ import type { Category } from "@/types";
 import { SummaryCard } from "./components/SummaryCard";
 import { CategoryCard } from "./components/CategoryCard";
 import { colorMap, iconMap } from "@/lib/utils";
+import { CreateCategoryDialog } from "./components/CreateCategoryDialog";
 import { UpdateCategoryDialog } from "./components/UpdateCategoryDialog";
 import { DeleteCategoryDialog } from "./components/DeleteCategoryDialog";
 
 
 export function Categories() {
 
-    const { data, loading, refetch } = useQuery<{ listCategories: Category[] }>(LIST_CATEGORIES);
+    const { data } = useQuery<{ listCategories: Category[] }>(LIST_CATEGORIES);
     const [isNewOpen, setIsNewOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)

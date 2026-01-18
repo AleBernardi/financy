@@ -3,8 +3,8 @@ import { TransactionType } from "../../enums/transactionType.enum";
 
 @InputType()
 export class CreateTransactionInput {
-  @Field(() => String, { nullable: true })
-  description?: string;
+  @Field(() => String)
+  description: string;
 
   @Field(() => TransactionType)
   type: TransactionType;

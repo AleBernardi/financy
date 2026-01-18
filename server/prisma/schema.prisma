@@ -46,7 +46,7 @@ model Category {
 
 model Transaction {
   id          String   @id @default(cuid())
-  description String?
+  description String
   type        Int
   date        DateTime @default(now())
   value       Float

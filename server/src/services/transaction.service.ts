@@ -62,6 +62,9 @@ export class TransactionService {
         return prismaClient.transaction.findMany({
             where: {
                 userId
+            },
+            orderBy: {
+                date: 'desc'
             }
         })
     }

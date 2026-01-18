@@ -27,7 +27,7 @@ input CreateCategoryInput {
 input CreateTransactionInput {
   categoryId: String!
   date: DateTimeISO!
-  description: String
+  description: String!
   type: TransactionType!
   value: Float!
 }
@@ -83,7 +83,7 @@ type TransactionModel {
   categoryId: String!
   createdAt: DateTimeISO!
   date: DateTimeISO!
-  description: String
+  description: String!
   id: ID!
   type: TransactionType!
   updatedAt: DateTimeISO!
