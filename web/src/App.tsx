@@ -7,6 +7,7 @@ import { Categories } from '@/pages/Categories/Index'
 import { ProtectedRoutes } from './routes/ProtectedRoutes'
 import { Profile } from './pages/Profile'
 import { Transactions } from './pages/Transactions/Index'
+import { Dashboard } from './pages/Dashboard'
 
 function App() {
 
@@ -19,7 +20,7 @@ function App() {
         </Route>
 
         <Route element={<ProtectedRoutes />}>
-          <Route path="/" element={<Navigate to="/categories" replace />} />
+          <Route path="/" element={<Dashboard />} />
           <Route path='/transactions' element={<Transactions />} />
           <Route path='/categories' element={<Categories />} />
           <Route path='/profile' element={<Profile />} />

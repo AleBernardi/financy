@@ -19,7 +19,7 @@ export function Header() {
     }
 
     const navItems = [
-        { label: "Dashboard", href: "/dashboard" },
+        { label: "Dashboard", href: "/" },
         { label: "Transações", href: "/transactions" },
         { label: "Categorias", href: "/categories" },
     ]
@@ -29,7 +29,7 @@ export function Header() {
             {isAuthenticated && (
                 <div className="flex items-center justify-between w-full mx-auto">
                     <div className="flex-1">
-                        <Link to="/dashboard" className="inline-block transition-opacity hover:opacity-80">
+                        <Link to="/" className="inline-block transition-opacity hover:opacity-80">
                             <img src={logo} alt="Financy Logo" className="h-8" />
                         </Link>
                     </div>

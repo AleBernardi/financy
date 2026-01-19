@@ -69,12 +69,12 @@ export function Categories() {
                 </div>
                 <div className="grid gap-6 md:grid-cols-3">
                     <SummaryCard title="Total de Categorias" value={categories.length}>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg text-gray-700">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-700">
                             <Tag className="h-6 w-6" />
                         </div>
                     </SummaryCard>
                     <SummaryCard title="Total de Transações" value={totalTransactions}>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg"
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg"
                             style={{
                                 color: colorMap['purple'].icon
                             }}>
@@ -86,7 +86,7 @@ export function Categories() {
                         value={mostUsed?.title || "N/A"}
                     >
                         <div
-                            className="flex h-12 w-12 items-center justify-center rounded-lg"
+                            className="flex h-8 w-8 items-center justify-center rounded-lg"
                             style={{
                                 color: mostUsedColors.icon
                             }}

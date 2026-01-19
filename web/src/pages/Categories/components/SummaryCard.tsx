@@ -1,3 +1,5 @@
+import { Card } from "@/components/ui/card";
+
 interface SummaryCardProps {
     title: string;
     value: string | number;
@@ -6,15 +8,15 @@ interface SummaryCardProps {
 
 export function SummaryCard({ title, value, children }: SummaryCardProps) {
     return (
-        <div className="flex items-center gap-4 rounded-xl border bg-white p-6 shadow-sm">
+        <Card className="flex gap-4 rounded-xl border p-6 shadow-sm">
             {children}
 
-            <div>
+            <div className="flex flex-col gap-2">
                 <p className="text-2xl font-bold text-slate-900">{value}</p>
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 line-clamp-1">
                     {title}
                 </p>
             </div>
-        </div>
+        </Card>
     );
 }
