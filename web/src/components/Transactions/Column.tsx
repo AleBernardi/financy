@@ -21,7 +21,7 @@ export const columns: ColumnDef<Transaction>[] = [
         cell: ({ row }) => (
             <div className="flex items-center gap-4 text-left">
                 <Icon iconName={row.original.category.icon} colorName={row.original.category.color} />
-                <Label className="font-medium text-slate-700">{row.original.description}</Label>
+                <Label className="text-gray-800">{row.original.description}</Label>
             </div>
         ),
     },
@@ -59,7 +59,7 @@ export const columns: ColumnDef<Transaction>[] = [
         cell: ({ row }) => {
             const isExpense = row.original.type === TransactionType.EXPENSE;
             return (
-                <div className={`flex items-center justify-center gap-2 ${isExpense ? "text-red-500" : "text-green-500"}`}>
+                <div className={`flex items-center justify-center gap-2 ${isExpense ? "text-danger" : "text-brand-base"}`}>
                     {isExpense ? <ArrowDownCircle size={16} /> : <ArrowUpCircle size={16} />}
                     <span>{isExpense ? "Saída" : "Entrada"}</span>
                 </div>
@@ -72,7 +72,7 @@ export const columns: ColumnDef<Transaction>[] = [
         cell: ({ row }) => {
             const isExpense = row.original.type === TransactionType.EXPENSE;
             return (
-                <div className="text-right font-bold text-slate-700">
+                <div className="text-right font-bold text-gray-800">
                     <Label>
                         {isExpense ? "- " : "+ "} R$ {formatCurrency(row.original.value)}
                     </Label>
@@ -88,18 +88,18 @@ export const columns: ColumnDef<Transaction>[] = [
             return (
                 <div className="flex justify-end gap-1">
                     <Button
-                        variant="ghost"
+                        variant="outline"
                         size="icon"
                         onClick={() => meta.onDelete(row.original)}
-                        className="h-8 w-8 text-red-400 hover:text-red-600 hover:bg-red-50"
+                        className="h-8 w-8 text-danger"
                     >
                         <Trash2 className="h-4 w-4" />
                     </Button>
                     <Button
-                        variant="ghost"
+                        variant="outline"
                         size="icon"
                         onClick={() => meta.onEdit(row.original)}
-                        className="h-8 w-8 text-slate-400 hover:bg-slate-50"
+                        className="h-8 w-8 text-gray-700"
                     >
                         <Edit3 className="h-4 w-4" />
                     </Button>

@@ -97,7 +97,7 @@ export function Dashboard() {
                         <Label className="font-bold text-slate-400 uppercase text-xs tracking-wider">
                             Transações Recentes
                         </Label>
-                        <Button variant="link" className="text-green-600 font-semibold gap-1 p-0 h-auto" asChild>
+                        <Button variant="link" asChild>
                             <Link to="/transactions" className="flex items-center">
                                 Ver todas
                                 <ChevronRight className="h-4 w-4" />
@@ -136,9 +136,9 @@ export function Dashboard() {
                                         </Label>
                                     </div>
                                     {t.type === TransactionType.EXPENSE ? (
-                                        <CircleArrowDown className="h-5 w-5 text-red-500" />
+                                        <CircleArrowDown className="h-5 w-5 text-danger" />
                                     ) : (
-                                        <CircleArrowUp className="h-5 w-5 text-green-500" />
+                                        <CircleArrowUp className="h-5 w-5 text-brand-base" />
                                     )}
                                 </div>
                             </div>
@@ -147,8 +147,8 @@ export function Dashboard() {
 
                     <div className="py-5 px-6">
                         <Button
-                            variant="ghost"
-                            className="w-full border-2 border-dashed border-slate-100 text-green-600 font-semibold hover:bg-slate-50"
+                            variant="link"
+                            className="w-full "
                             onClick={() => setIsNewOpen(true)}
                         >
                             + Nova transação
@@ -161,7 +161,7 @@ export function Dashboard() {
                         <Label className="font-bold text-slate-400 uppercase text-xs tracking-wider">
                             Categorias
                         </Label>
-                        <Button variant="link" className="text-green-600 font-semibold gap-1 p-0 h-auto" asChild>
+                        <Button variant="link" asChild>
                             <Link to="/categories" className="flex items-center">
                                 Gerenciar
                                 <ChevronRight className="h-4 w-4" />

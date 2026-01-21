@@ -24,6 +24,7 @@ export default {
           base: "hsl(var(--brand-base))",
           dark: "hsl(var(--brand-dark))"
         },
+        danger: 'hsl(var(--danger))',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

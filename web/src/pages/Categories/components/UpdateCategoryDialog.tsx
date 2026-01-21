@@ -30,6 +30,7 @@ import { useMutation } from "@apollo/client/react"
 import { UPDATE_CATEGORY } from "@/lib/graphql/mutations/Category"
 import { toast } from "sonner"
 import type { Category } from "@/types"
+import { Button } from "@/components/ui/button"
 
 interface UpdateCategoryDialogProps {
     open: boolean
@@ -139,13 +140,13 @@ export function UpdateCategoryDialog({
                                 Altere as informações da categoria
                             </DialogDescription>
                         </div>
-                        <button
-                            type="button"
+                        <Button
+                            variant="outline"
+                            size="icon"
                             onClick={() => onOpenChange(false)}
-                            className="flex h-7 w-7 items-center justify-center rounded-md border border-gray-300 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
                         >
                             <X className="h-4 w-4" />
-                        </button>
+                        </Button>
                     </div>
                 </DialogHeader>
 

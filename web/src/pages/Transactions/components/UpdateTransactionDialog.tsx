@@ -108,11 +108,10 @@ export function UpdateTransactionDialog({
                                 Altere os dados da sua transação
                             </DialogDescription>
                         </div>
-
                         <Button
-                            type="button"
+                            variant="outline"
+                            size="icon"
                             onClick={() => onOpenChange(false)}
-                            className="flex h-7 w-7 items-center justify-center rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100"
                         >
                             <X className="h-4 w-4" />
                         </Button>

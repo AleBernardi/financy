@@ -32,18 +32,18 @@ export function CategoryCard({
 
                     <div className="flex gap-1">
                         <Button
-                            variant="ghost"
+                            variant="outline"
                             size="icon"
                             onClick={onDelete}
-                            className="h-8 w-8 text-red-400 hover:text-red-600 hover:bg-red-50"
+                            className="h-8 w-8 text-danger"
                         >
                             <Trash2 className="h-4 w-4" />
                         </Button>
                         <Button
-                            variant="ghost"
+                            variant="outline"
                             size="icon"
                             onClick={onEdit}
-                            className="h-8 w-8 text-slate-400 hover:bg-slate-50"
+                            className="h-8 w-8"
                         >
                             <Edit3 className="h-4 w-4" />
                         </Button>

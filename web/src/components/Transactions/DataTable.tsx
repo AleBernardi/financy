@@ -79,9 +79,9 @@ export function DataTable<TData, TValue>({ columns, data, onEdit, onDelete }: Da
             </div>
 
             <div className="flex items-center justify-between px-2">
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-gray-700">
                     {table.getState().pagination.pageIndex * 10 + 1} a{" "}
-                    {Math.min((table.getState().pagination.pageIndex + 1) * 10, data.length)} de {data.length} resultados
+                    {Math.min((table.getState().pagination.pageIndex + 1) * 10, data.length)} | {data.length} resultados
                 </div>
                 <div className="flex items-center space-x-2">
                     <Button
@@ -96,8 +96,8 @@ export function DataTable<TData, TValue>({ columns, data, onEdit, onDelete }: Da
                         {Array.from({ length: table.getPageCount() }).map((_, i) => (
                             <Button
                                 key={i}
-                                variant={table.getState().pagination.pageIndex === i ? "default" : "ghost"}
-                                size="sm"
+                                variant={table.getState().pagination.pageIndex === i ? "default" : "outline"}
+                                size="icon"
                                 onClick={() => table.setPageIndex(i)}
                             >
                                 {i + 1}

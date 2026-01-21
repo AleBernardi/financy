@@ -35,11 +35,11 @@ export function DatePicker({
     const displayFormat = formatType === "month" ? "MMMM 'de' yyyy" : "dd/MM/yyyy"
 
     return (
-        <div className="flex flex-col w-full space-y-1">
+        <div className="flex flex-col w-full">
             {label && (
                 <Label className="text-sm font-medium">
                     {label}
-                    {error && <span className="text-red-500 ml-1">*</span>}
+                    {error && <span className="text-danger ml-1">*</span>}
                 </Label>
             )}
 
@@ -48,7 +48,7 @@ export function DatePicker({
                     <Button
                         type="button"
                         variant="outline"
-                        className={`h-11 w-full justify-between font-normal ${error ? "border-red-500" : ""}`}
+                        className={`w-full justify-between font-normal ${error ? "border-danger" : ""}`}
                     >
                         <span className="capitalize">
                             {value
@@ -69,11 +69,10 @@ export function DatePicker({
                         }}
                         initialFocus
                     />
-                    {/* Botão para limpar o filtro caso já exista um valor */}
                     {value && (
                         <div className="p-2 border-t">
                             <Button
-                                variant="ghost"
+                                variant="outline"
                                 className="w-full h-8 text-xs"
                                 onClick={() => {
                                     onChange?.(undefined)

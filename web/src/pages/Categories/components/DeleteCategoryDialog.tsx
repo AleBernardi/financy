@@ -12,6 +12,7 @@ import { DELETE_CATEGORY } from "@/lib/graphql/mutations/Category"
 import { toast } from "sonner"
 import type { Category } from "@/types"
 import { AlertTriangle, X } from "lucide-react"
+import { Icon } from "@/components/Icon"
 
 interface DeleteCategoryDialogProps {
     open: boolean
@@ -54,16 +55,14 @@ export function DeleteCategoryDialog({
             <DialogContent className="[&>button]:hidden max-w-[500px]">
                 <DialogHeader className="space-y-3">
                     <div className="flex items-start justify-between">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50">
-                            <AlertTriangle className="h-6 w-6 text-red-600" />
-                        </div>
-                        <button
-                            type="button"
+                        <Icon iconName="AlertTriangle" colorName="red" />
+                        <Button
+                            variant="outline"
+                            size="icon"
                             onClick={() => onOpenChange(false)}
-                            className="flex h-7 w-7 items-center justify-center rounded-md border border-gray-300 text-gray-600 transition hover:bg-gray-100"
                         >
                             <X className="h-4 w-4" />
-                        </button>
+                        </Button>
                     </div>
 
                     <div className="space-y-1">
@@ -83,19 +82,16 @@ export function DeleteCategoryDialog({
 
                 <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end sm:gap-0 mt-4">
                     <Button
-                        type="button"
                         variant="outline"
                         onClick={() => onOpenChange(false)}
                         disabled={loading}
-                        className="w-full sm:w-auto"
                     >
                         Cancelar
                     </Button>
                     <Button
-                        type="button"
+                        variant="danger"
                         onClick={handleDelete}
                         disabled={loading}
-                        className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white"
                     >
                         {loading ? "Removendo..." : "Remover"}
                     </Button>

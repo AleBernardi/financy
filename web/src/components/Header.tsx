@@ -53,8 +53,8 @@ export function Header() {
 
                     <div className="flex-1 flex justify-end">
                         <Link to="/profile">
-                            <Avatar className="h-10 w-10 border border-gray-200 bg-slate-100 cursor-pointer transition-transform hover:scale-105 active:scale-95">
-                                <AvatarFallback className="text-sm font-semibold text-slate-600">
+                            <Avatar className="h-9 w-9 bg-gray-300 hover:bg-gray-500 cursor-pointer">
+                                <AvatarFallback className="text-sm font-bold text-gray-800">
                                     {user?.name ? getInitials(user.name) : "CT"}
                                 </AvatarFallback>
                             </Avatar>

@@ -23,6 +23,7 @@ export const iconMap: Record<string, LucideIcons.LucideIcon> = {
     BaggageClaim: LucideIcons.BaggageClaim,
     Mailbox: LucideIcons.Mailbox,
     ReceiptText: LucideIcons.ReceiptText,
+    AlertTriangle: LucideIcons.AlertTriangle,
 };
 interface ColorScheme {
   icon: string;

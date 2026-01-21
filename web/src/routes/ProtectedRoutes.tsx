@@ -11,7 +11,8 @@ export function ProtectedRoutes() {
         try {
             const decoded = jwtDecode<{ exp: number }>(token);
             const currentTime = Date.now() / 1000;
-
+            const date = new Date(decoded.exp * 1000)
+            console.log(date.toLocaleString())
             return decoded.exp < currentTime;
         } catch (error) {
             return true;

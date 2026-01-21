@@ -101,7 +101,7 @@ export function Profile() {
                                     <div>
                                         <Button
                                             type="submit"
-                                            className="w-full bg-brand-base hover:bg-brand-dark transition-colors py-6 text-base"
+                                            className="w-full"
                                             disabled={loading}
                                         >
                                             Salvar alterações
@@ -109,12 +109,11 @@ export function Profile() {
                                     </div>
                                     <div>
                                         <Button
-                                            type="button"
                                             variant="outline"
-                                            className="w-full flex items-center justify-center gap-2 py-6 text-gray-700 border-gray-300"
+                                            className="w-full flex items-center justify-center gap-2 "
                                             onClick={logout}
                                         >
-                                            <LogOut className="h-4 w-4 text-red-500" />
+                                            <LogOut className="h-4 w-4" />
                                             Sair da conta
                                         </Button>
                                     </div>

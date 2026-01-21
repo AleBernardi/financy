@@ -58,9 +58,8 @@ export function Categories() {
                         </Label>
                     </div>
                     <div>
-                        <Button
+                        <Button size="sm"
                             onClick={() => { setIsNewOpen(true) }}
-                            className="w-full"
                         >
                             <Plus className="h-4 w-4" />
                             Nova categoria

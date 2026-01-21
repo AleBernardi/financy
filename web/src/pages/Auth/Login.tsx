@@ -97,12 +97,16 @@ export function Login() {
                                     Lembrar-me
                                 </Label>
                             </div>
-                            <a
-                                href="#"
-                                className="text-sm font-medium text-green-base hover:underline"
+                            <Button
+                                variant="link"
+                                asChild
                             >
-                                Recuperar senha
-                            </a>
+                                <Link
+                                    to="/"
+                                >
+                                    Recuperar senha
+                                </Link>
+                            </Button>
                         </div>
                         <Button type="submit" className="w-full" disabled={loading}>
                             Entrar

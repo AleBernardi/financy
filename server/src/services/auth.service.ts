@@ -45,7 +45,7 @@ export class AuthService {
     }
 
     genertateTokens(user: User) {
-        const token = singJwt({id: user.id, email: user.email}, '15m');
+        const token = singJwt({id: user.id, email: user.email}, '4h');
         const refreshToken = singJwt({id: user.id, email: user.email}, '1d');
 
         return { token, refreshToken, user }

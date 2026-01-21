@@ -39,8 +39,8 @@ export function Transactions() {
                         <Label className="text-3xl font-medium">Transações</Label>
                         <Label className="text-sm text-muted-foreground">Gerencie todas as suas transações financeiras</Label>
                     </div>
-                    <Button onClick={() => setIsNewOpen(true)}>
-                        <Plus className="h-4 w-4 mr-2" />
+                    <Button size="sm" onClick={() => setIsNewOpen(true)}>
+                        <Plus className="h-4 w-4" />
                         Nova transação
                     </Button>
                 </div>
