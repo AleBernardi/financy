@@ -25,4 +25,10 @@ export class LoginInput {
 export class PasswordRecoverInput {
     @Field(() => String)
     email!: string
+
+    @Field(() => Number, {nullable: true})
+    code?: number
+
+    @Field(() => String, {nullable: true})
+    password?: string
 }

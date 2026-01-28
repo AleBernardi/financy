@@ -21,11 +21,23 @@ export class AuthResolver {
     }
 
     @Mutation(() => Boolean)
-    async passwordRecover(
+    async sendPasswordRecoveryCode(
         @Arg('data', () => PasswordRecoverInput) data: PasswordRecoverInput
     ): Promise<Boolean>{
-        await this.authService.passwordRecover(data);
+        return await this.authService.sendPasswordRecoveryCode(data);
+    }
 
-        return true;
+    @Mutation(() => Boolean)
+    async verifyPasswordRecoveryCode(
+        @Arg('data', () => PasswordRecoverInput) data: PasswordRecoverInput
+    ): Promise<Boolean>{
+        return await this.authService.verifyPasswordRecoveryCode(data);
+    }
+
+    @Mutation(() => Boolean)
+    async resetPassword(
+        @Arg('data', () => PasswordRecoverInput) data: PasswordRecoverInput
+    ): Promise<Boolean>{
+        return await this.authService.resetPassword(data);
     }
 }

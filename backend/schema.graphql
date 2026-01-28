@@ -54,15 +54,19 @@ type Mutation {
   deleteCategory(id: String!): Boolean!
   deleteTransaction(id: String!): Boolean!
   login(data: LoginInput!): LoginOutput!
-  passwordRecover(data: PasswordRecoverInput!): Boolean!
   register(data: RegisterInput!): RegisterOutput!
+  resetPassword(data: PasswordRecoverInput!): Boolean!
+  sendPasswordRecoveryCode(data: PasswordRecoverInput!): Boolean!
   updateCategory(data: UpdateCategoryInput!, id: String!): CategoryModel!
   updateTransaction(data: UpdateTransactionInput!, id: String!): TransactionModel!
   updateUser(data: UpdateUserInput!): UserModel!
+  verifyPasswordRecoveryCode(data: PasswordRecoverInput!): Boolean!
 }
 
 input PasswordRecoverInput {
+  code: Float
   email: String!
+  password: String
 }
 
 type Query {

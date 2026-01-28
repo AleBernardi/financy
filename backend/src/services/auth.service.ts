@@ -45,7 +45,7 @@ export class AuthService {
         return this.genertateTokens(existingUser);
     }
 
-    async passwordRecover(data: PasswordRecoverInput) {
+    async sendPasswordRecoveryCode(data: PasswordRecoverInput) {
         const existingUser = await prismaClient.user.findUnique({
             where: {
                 email: data.email
@@ -68,8 +68,53 @@ export class AuthService {
         await this.sendPasswordRecoverEmail(existingUser, code)
 
         return true
+    }
 
+    async verifyPasswordRecoveryCode(data: PasswordRecoverInput) {
+        const user = await prismaClient.user.findFirst({
+            where: {
+                email: data.email,
+                passwordRecoveryCode: data.code,
+                passwordRecoveryExpiresAt: {
+                    gte: new Date(),
+                },
+            },
+        });
 
+        if (!user) {
+            throw new Error("Código inválido ou expirado.");
+        }
+
+        return true;
+    }
+
+    async resetPassword(data: PasswordRecoverInput){
+        const user = await prismaClient.user.findFirst({
+            where: {
+                email: data.email,
+                passwordRecoveryCode: data.code,
+                passwordRecoveryExpiresAt: {
+                    gte: new Date(),
+                },
+            },
+        });
+
+        if (!user) {
+            throw new Error("Código inválido ou expirado.");
+        }
+
+        const hash = await hashPassword(data.password);
+    
+        await prismaClient.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                password: hash
+            }
+        });
+
+        return true;
     }
 
     genertateTokens(user: User) {
