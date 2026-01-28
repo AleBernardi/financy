@@ -54,10 +54,15 @@ type Mutation {
   deleteCategory(id: String!): Boolean!
   deleteTransaction(id: String!): Boolean!
   login(data: LoginInput!): LoginOutput!
+  passwordRecover(data: PasswordRecoverInput!): Boolean!
   register(data: RegisterInput!): RegisterOutput!
   updateCategory(data: UpdateCategoryInput!, id: String!): CategoryModel!
   updateTransaction(data: UpdateTransactionInput!, id: String!): TransactionModel!
   updateUser(data: UpdateUserInput!): UserModel!
+}
+
+input PasswordRecoverInput {
+  email: String!
 }
 
 type Query {

@@ -34,14 +34,14 @@ export function Login() {
         try {
             const signUpMutate = await login({
                 email,
-                password
-            })
+                password,
+            }, remember)
 
             if (signUpMutate) {
                 toast.success("Login realizado com sucesso!");
             }
         } catch (error: any) {
-            toast.error("Erro ao realizar o cadastro!");
+            toast.error("Erro ao realizar o login!");
         } finally {
             setLoading(false)
         }
@@ -102,7 +102,7 @@ export function Login() {
                                 asChild
                             >
                                 <Link
-                                    to="/"
+                                    to="/password-recover"
                                 >
                                     Recuperar senha
                                 </Link>

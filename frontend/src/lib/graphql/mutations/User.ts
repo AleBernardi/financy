@@ -7,3 +7,9 @@ export const UPDATE_USER = gql`
         }
     }
 `
+
+export const PASSWORD_RECOVER = gql`
+    mutation PasswordRecover($data: PasswordRecoverInput!){
+        passwordRecover(data: $data)
+    }
+`

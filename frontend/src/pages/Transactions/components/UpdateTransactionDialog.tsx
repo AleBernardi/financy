@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog"
 import { InputComponent } from "@/components/Input"
 import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
+import { ArrowDownCircle, ArrowUpCircle, X } from "lucide-react"
 import { useMutation, useQuery } from "@apollo/client/react"
 import { toast } from "sonner"
 import { LIST_CATEGORIES } from "@/lib/graphql/queries/Categories"
@@ -122,23 +122,27 @@ export function UpdateTransactionDialog({
                     <div className="grid grid-cols-2 gap-2">
                         <Button
                             type="button"
+                            variant='outline'
                             onClick={() => setType(TransactionType.EXPENSE)}
-                            className={`h-10 rounded-md border font-medium ${type === TransactionType.EXPENSE
-                                ? "border-red-500 bg-red-50 text-red-600"
-                                : "border-gray-200"
+                            className={`${type === TransactionType.EXPENSE
+                                ? "border-danger text-danger"
+                                : ""
                                 }`}
                         >
+                            <ArrowDownCircle size={16} />
                             Despesa
                         </Button>
 
                         <Button
                             type="button"
+                            variant='outline'
                             onClick={() => setType(TransactionType.INCOME)}
-                            className={`h-10 rounded-md border font-medium ${type === TransactionType.INCOME
-                                ? "border-green-600 bg-green-50 text-green-700"
-                                : "border-gray-200"
+                            className={`${type === TransactionType.INCOME
+                                ? "border-brand-base text-brand-base"
+                                : ""
                                 }`}
                         >
+                            <ArrowUpCircle size={16} />
                             Receita
                         </Button>
                     </div>
@@ -194,10 +198,11 @@ export function UpdateTransactionDialog({
 
                     <Button
                         type="submit"
+                        variant="default"
                         disabled={loading}
-                        className="h-11 w-full rounded-md text-white font-medium"
+                        className="w-full"
                     >
-                        {loading ? "Salvando..." : "Salvar Alterações"}
+                        Salvar
                     </Button>
                 </form>
             </DialogContent>

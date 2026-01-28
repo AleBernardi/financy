@@ -214,13 +214,13 @@ export function CreateCategoryDialog({
                         </div>
                     </div>
 
-                    <button
+                    <Button
                         type="submit"
                         disabled={loading}
-                        className="h-11 w-full rounded-md bg-green-700 text-white font-medium hover:bg-green-800 disabled:opacity-50"
+                        className="w-full"
                     >
                         Salvar
-                    </button>
+                    </Button>
                 </form>
             </DialogContent>
         </Dialog>

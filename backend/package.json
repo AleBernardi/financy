@@ -29,6 +29,7 @@
     "express": "^5.2.1",
     "graphql": "^16.12.0",
     "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^7.0.13",
     "prisma": "^6.19.1",
     "reflect-metadata": "^0.2.2",
     "type-graphql": "2.0.0-rc.2"
