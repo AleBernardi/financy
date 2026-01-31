@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     Card,
     CardContent,
@@ -12,13 +11,39 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@apollo/client/react";
 import { UPDATE_USER } from "@/lib/graphql/mutations/User";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+
+const profileSchema = z.object({
+    name: z.string().min(3, "O nome deve ter no mínimo 3 caracteres"),
+});
+
+type ProfileForm = z.infer<typeof profileSchema>;
 
 export function Profile() {
     const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
-    const updateStoreUser = useAuthStore((state) => state.updateUser)
+    const updateStoreUser = useAuthStore((state) => state.updateUser);
 
-    const [name, setName] = useState(user?.name || "");
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+    } = useForm<ProfileForm>({
+        resolver: zodResolver(profileSchema),
+        defaultValues: {
+            name: user?.name || "",
+        },
+    });
+
+    useEffect(() => {
+        if (user?.name) {
+            setValue("name", user.name);
+        }
+    }, [user, setValue]);
 
     const getInitials = (name: string) => {
         const names = name.trim().split(" ");
@@ -30,32 +55,30 @@ export function Profile() {
         onCompleted(data: any) {
             if (data?.updateUser) {
                 updateStoreUser({
-                    name: data.updateUser.name
+                    name: data.updateUser.name,
                 });
             }
             toast.success("Perfil atualizado com sucesso!");
         },
         onError() {
-            toast.error("Falha ao atualizar o perfil!")
+            toast.error("Falha ao atualizar o perfil!");
         },
-    })
+    });
 
-    const handleUpdateProfile = async (e: React.FormEvent) => {
-        e.preventDefault();
-
+    const onSubmit = (data: ProfileForm) => {
         updateUser({
             variables: {
                 data: {
-                    name
+                    name: data.name,
                 },
             },
-        })
+        });
     };
 
     return (
         <div className="flex flex-col min-h-[calc(100vh-10rem)] items-center justify-center">
             <Card className="w-full max-w-md rounded-xl p-8 shadow-sm border-1">
-                <CardContent >
+                <CardContent>
                     <div className="flex flex-col gap-6">
                         <div className="flex flex-col gap-6 items-center">
                             <div>
@@ -66,25 +89,30 @@ export function Profile() {
                                 </Avatar>
                             </div>
                             <div className="flex flex-col items-center">
-                                <Label className="text-xl font-bold text-gray-700">{user?.name || "Usuário"}</Label>
+                                <Label className="text-xl font-bold text-gray-700">
+                                    {user?.name || "Usuário"}
+                                </Label>
                                 <Label className="text-sm text-muted-foreground">{user?.email}</Label>
                             </div>
                         </div>
                         <div></div>
                         <div>
-                            <form onSubmit={handleUpdateProfile} >
+                            <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="flex flex-col gap-4">
                                     <div>
                                         <InputComponent
                                             id="name"
                                             type="text"
                                             placeholder="Seu nome completo"
-                                            value={name}
-                                            onChange={(e) => setName(e.target.value)}
-                                            required
+                                            {...register("name")}
                                             icon={UserRound}
                                             label="Nome completo"
                                         />
+                                        {errors.name && (
+                                            <span className="text-red-500 text-sm">
+                                                {errors.name.message}
+                                            </span>
+                                        )}
                                     </div>
                                     <div>
                                         <InputComponent
@@ -112,6 +140,7 @@ export function Profile() {
                                             variant="outline"
                                             className="w-full flex items-center justify-center gap-2 "
                                             onClick={logout}
+                                            type="button"
                                         >
                                             <LogOut className="h-4 w-4" />
                                             Sair da conta

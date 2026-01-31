@@ -21,13 +21,34 @@ import {
 } from "@/lib/graphql/mutations/User";
 
 import { useMutation } from "@apollo/client/react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const sendEmailSchema = z.object({
+    email: z.string().email("E-mail inválido"),
+});
+
+const verifyCodeSchema = z.object({
+    code: z.string().length(6, "O código deve ter 6 dígitos"),
+});
+
+const resetPasswordSchema = z
+    .object({
+        password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
+        confirmPassword: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "As senhas não coincidem",
+        path: ["confirmPassword"],
+    });
+
+type SendEmailForm = z.infer<typeof sendEmailSchema>;
+type VerifyCodeForm = z.infer<typeof verifyCodeSchema>;
+type ResetPasswordForm = z.infer<typeof resetPasswordSchema>;
 
 export function PasswordRecover() {
     const [email, setEmail] = useState("");
-    const [code, setCode] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-
     const [emailSent, setEmailSent] = useState(false);
     const [verifiedCode, setVerifiedCode] = useState(false);
 
@@ -35,6 +56,30 @@ export function PasswordRecover() {
     const [canResend, setCanResend] = useState(false);
 
     const navigate = useNavigate();
+
+    const {
+        register: registerEmail,
+        handleSubmit: handleSubmitEmail,
+        formState: { errors: errorsEmail },
+    } = useForm<SendEmailForm>({
+        resolver: zodResolver(sendEmailSchema),
+    });
+
+    const {
+        register: registerCode,
+        handleSubmit: handleSubmitCode,
+        formState: { errors: errorsCode },
+    } = useForm<VerifyCodeForm>({
+        resolver: zodResolver(verifyCodeSchema),
+    });
+
+    const {
+        register: registerReset,
+        handleSubmit: handleSubmitReset,
+        formState: { errors: errorsReset },
+    } = useForm<ResetPasswordForm>({
+        resolver: zodResolver(resetPasswordSchema),
+    });
 
     const [sendPasswordRecoveryCode, { loading: loadingSend }] = useMutation(
         SEND_PASSWORD_RECOVERY_CODE,
@@ -64,11 +109,12 @@ export function PasswordRecover() {
         }
     );
 
-    const [resetPassword, { loading: loadingReset }] = useMutation(RESET_PASSWORD, {
+    const [resetPassword, { loading: loadingReset }] = useMutation(
+        RESET_PASSWORD,
+        {
             onCompleted() {
                 toast.success("Senha redefinida com sucesso!");
                 navigate("/login");
-
             },
             onError() {
                 toast.error("Erro ao redefinir senha.");
@@ -93,6 +139,35 @@ export function PasswordRecover() {
         return () => clearInterval(interval);
     }, [emailSent, canResend]);
 
+    const onSendEmail = (data: SendEmailForm) => {
+        setEmail(data.email);
+        sendPasswordRecoveryCode({
+            variables: { data: { email: data.email } },
+        });
+    };
+
+    const onVerifyCode = (data: VerifyCodeForm) => {
+        verifyPasswordRecoveryCode({
+            variables: {
+                data: {
+                    email,
+                    code: Number(data.code),
+                },
+            },
+        });
+    };
+
+    const onResetPassword = (data: ResetPasswordForm) => {
+        resetPassword({
+            variables: {
+                data: {
+                    email,
+                    password: data.password,
+                },
+            },
+        });
+    };
+
     return (
         <div className="flex flex-col min-h-[calc(100vh-4rem)] items-center justify-center">
             <img src={logo} alt="Logo" className="w-64 h-8 mb-8" />
@@ -110,25 +185,24 @@ export function PasswordRecover() {
 
                     <CardContent>
                         <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                if (loadingSend) return;
-                                sendPasswordRecoveryCode({
-                                    variables: { data: { email } },
-                                });
-                            }}
+                            onSubmit={handleSubmitEmail(onSendEmail)}
                             className="space-y-6"
                         >
-                            <InputComponent
-                                id="email"
-                                type="email"
-                                placeholder="mail@example.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                icon={Mail}
-                                label="E-mail"
-                            />
+                            <div>
+                                <InputComponent
+                                    id="email"
+                                    type="email"
+                                    placeholder="mail@example.com"
+                                    {...registerEmail("email")}
+                                    icon={Mail}
+                                    label="E-mail"
+                                />
+                                {errorsEmail.email && (
+                                    <span className="text-red-500 text-sm">
+                                        {errorsEmail.email.message}
+                                    </span>
+                                )}
+                            </div>
 
                             <Button
                                 type="submit"
@@ -174,30 +248,24 @@ export function PasswordRecover() {
 
                     <CardContent>
                         <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                if (loadingVerify) return;
-                                verifyPasswordRecoveryCode({
-                                    variables: {
-                                        data: {
-                                            email,
-                                            code: Number(code),
-                                        },
-                                    },
-                                });
-                            }}
+                            onSubmit={handleSubmitCode(onVerifyCode)}
                             className="space-y-6"
                         >
-                            <InputComponent
-                                id="code"
-                                type="text"
-                                placeholder="000000"
-                                maxLength={6}
-                                value={code}
-                                onChange={(e) => setCode(e.target.value)}
-                                label="Código"
-                                required
-                            />
+                            <div>
+                                <InputComponent
+                                    id="code"
+                                    type="text"
+                                    placeholder="000000"
+                                    maxLength={6}
+                                    {...registerCode("code")}
+                                    label="Código"
+                                />
+                                {errorsCode.code && (
+                                    <span className="text-red-500 text-sm">
+                                        {errorsCode.code.message}
+                                    </span>
+                                )}
+                            </div>
 
                             <Button
                                 type="submit"
@@ -224,8 +292,8 @@ export function PasswordRecover() {
                                 {loadingSend
                                     ? "Enviando..."
                                     : canResend
-                                    ? "Reenviar código"
-                                    : `Reenviar em ${resendTimer}s`}
+                                        ? "Reenviar código"
+                                        : `Reenviar em ${resendTimer}s`}
                             </Button>
                         </form>
                     </CardContent>
@@ -245,47 +313,36 @@ export function PasswordRecover() {
 
                     <CardContent>
                         <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                if (loadingReset) return;
-
-                                if (password !== confirmPassword) {
-                                    toast.error("As senhas não coincidem.");
-                                    return;
-                                }
-
-                                resetPassword({
-                                    variables: {
-                                        data: {
-                                            email,
-                                            password,
-                                        },
-                                    },
-                                });
-                            }}
+                            onSubmit={handleSubmitReset(onResetPassword)}
                             className="space-y-6"
                         >
-                            <InputComponent
-                                id="password"
-                                type="password"
-                                label="Nova senha"
-                                value={password}
-                                onChange={(e) =>
-                                    setPassword(e.target.value)
-                                }
-                                required
-                            />
+                            <div>
+                                <InputComponent
+                                    id="password"
+                                    type="password"
+                                    label="Nova senha"
+                                    {...registerReset("password")}
+                                />
+                                {errorsReset.password && (
+                                    <span className="text-red-500 text-sm">
+                                        {errorsReset.password.message}
+                                    </span>
+                                )}
+                            </div>
 
-                            <InputComponent
-                                id="confirmPassword"
-                                type="password"
-                                label="Confirmar senha"
-                                value={confirmPassword}
-                                onChange={(e) =>
-                                    setConfirmPassword(e.target.value)
-                                }
-                                required
-                            />
+                            <div>
+                                <InputComponent
+                                    id="confirmPassword"
+                                    type="password"
+                                    label="Confirmar senha"
+                                    {...registerReset("confirmPassword")}
+                                />
+                                {errorsReset.confirmPassword && (
+                                    <span className="text-red-500 text-sm">
+                                        {errorsReset.confirmPassword.message}
+                                    </span>
+                                )}
+                            </div>
 
                             <Button
                                 type="submit"

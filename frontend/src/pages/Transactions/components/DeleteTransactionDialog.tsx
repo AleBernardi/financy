@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { useMutation } from "@apollo/client/react"
 import { toast } from "sonner"
 import type { Transaction } from "@/types"
-import { AlertTriangle, X } from "lucide-react"
+import { X } from "lucide-react"
 import { DELETE_TRANSACTION } from "@/lib/graphql/mutations/Transaction"
 import { Icon } from "@/components/Icon"
 

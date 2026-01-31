@@ -16,25 +16,40 @@ import { PasswordInput } from "@/components/PasswordInput";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "@/stores/auth";
 import { toast } from "sonner";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const signUpSchema = z.object({
+    name: z.string().min(3, "O nome deve ter no mínimo 3 caracteres"),
+    email: z.string().email("E-mail inválido"),
+    password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
+});
+
+type SignUpForm = z.infer<typeof signUpSchema>;
 
 export function SignUp() {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
 
     const signUp = useAuthStore((state) => state.signUp);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<SignUpForm>({
+        resolver: zodResolver(signUpSchema),
+    });
+
+    const onSubmit = async (data: SignUpForm) => {
         setLoading(true);
 
         try {
             const signUpMutate = await signUp({
-                name,
-                email,
-                password
-            })
+                name: data.name,
+                email: data.email,
+                password: data.password,
+            });
 
             if (signUpMutate) {
                 toast.success("Cadastro realizado com sucesso!");
@@ -42,7 +57,7 @@ export function SignUp() {
         } catch (error: any) {
             toast.error("Erro ao realizar o cadastro!");
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
 
@@ -61,36 +76,58 @@ export function SignUp() {
                 </div>
 
                 <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <InputComponent
-                            id="name"
-                            type="text"
-                            placeholder="Seu nome completo"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                            icon={UserRound}
-                            label="Nome completo"
-                        />
-                        <InputComponent
-                            id="email"
-                            type="email"
-                            placeholder="mail@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            icon={Mail}
-                            label="E-mail"
-                        />
-                        <PasswordInput
-                            id="password"
-                            placeholder="Digite sua senha"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            label="Senha"
-                        />
-                        <Button type="submit" className="w-full" disabled={loading}>
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-6"
+                    >
+                        <div>
+                            <InputComponent
+                                id="name"
+                                type="text"
+                                placeholder="Seu nome completo"
+                                {...register("name")}
+                                icon={UserRound}
+                                label="Nome completo"
+                            />
+                            {errors.name && (
+                                <span className="text-red-500 text-sm">
+                                    {errors.name.message}
+                                </span>
+                            )}
+                        </div>
+                        <div>
+                            <InputComponent
+                                id="email"
+                                type="email"
+                                placeholder="mail@example.com"
+                                {...register("email")}
+                                icon={Mail}
+                                label="E-mail"
+                            />
+                            {errors.email && (
+                                <span className="text-red-500 text-sm">
+                                    {errors.email.message}
+                                </span>
+                            )}
+                        </div>
+                        <div>
+                            <PasswordInput
+                                id="password"
+                                placeholder="Digite sua senha"
+                                {...register("password")}
+                                label="Senha"
+                            />
+                            {errors.password && (
+                                <span className="text-red-500 text-sm">
+                                    {errors.password.message}
+                                </span>
+                            )}
+                        </div>
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={loading}
+                        >
                             Cadastrar
                         </Button>
                         <div className="relative flex items-center">
@@ -121,6 +158,6 @@ export function SignUp() {
                     </form>
                 </CardContent>
             </Card>
-        </div >
+        </div>
     );
 }

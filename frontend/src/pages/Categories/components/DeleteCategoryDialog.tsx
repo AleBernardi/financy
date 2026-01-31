@@ -11,7 +11,7 @@ import { useMutation } from "@apollo/client/react"
 import { DELETE_CATEGORY } from "@/lib/graphql/mutations/Category"
 import { toast } from "sonner"
 import type { Category } from "@/types"
-import { AlertTriangle, X } from "lucide-react"
+import { X } from "lucide-react"
 import { Icon } from "@/components/Icon"
 
 interface DeleteCategoryDialogProps {

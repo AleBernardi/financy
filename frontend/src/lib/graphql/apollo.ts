@@ -6,7 +6,7 @@ const httpLink = new HttpLink({
     uri: import.meta.env.VITE_BACKEND_URL,
 });
 
-const authLink = new SetContextLink((prevContext, operation) => {
+const authLink = new SetContextLink((prevContext, _operation) => {
     const token = useAuthStore.getState().token
     return {
         headers: {

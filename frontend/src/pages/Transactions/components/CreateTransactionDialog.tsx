@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import {
     Dialog,
     DialogContent,
@@ -20,12 +20,25 @@ import { CurrencyInput } from "@/components/CurrencyInput"
 import { SelectInput } from "@/components/SelectInput"
 
 import { TransactionType } from "@/types/enums"
+import { z } from "zod"
+import { Controller, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 interface CreateTransactionDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
     onSuccess?: () => void
 }
+
+const createTransactionSchema = z.object({
+    type: z.enum(["EXPENSE", "INCOME"]),
+    description: z.string().min(1, "A descrição é obrigatória"),
+    date: z.date(),
+    value: z.number().min(0.01, "O valor deve ser maior que 0"),
+    categoryId: z.string().min(1, "A categoria é obrigatória"),
+})
+
+type CreateTransactionForm = z.infer<typeof createTransactionSchema>
 
 export function CreateTransactionDialog({
     open,
@@ -35,65 +48,54 @@ export function CreateTransactionDialog({
     const { data } = useQuery<{ listCategories: Category[] }>(LIST_CATEGORIES)
     const categories = data?.listCategories || []
 
-    const [type, setType] = useState<"EXPENSE" | "INCOME">(TransactionType.EXPENSE)
-    const [description, setDescription] = useState("")
-    const [date, setDate] = useState<Date | undefined>()
-    const [dateError, setDateError] = useState(false)
-    const [value, setValue] = useState(0)
-    const [valueError, setValueError] = useState(false)
-    const [categoryId, setCategoryId] = useState("")
-    const [categoryError, setCategoryError] = useState(false)
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+        watch,
+        control,
+        reset,
+    } = useForm<CreateTransactionForm>({
+        resolver: zodResolver(createTransactionSchema),
+        defaultValues: {
+            type: TransactionType.EXPENSE,
+            description: "",
+            value: 0,
+            categoryId: "",
+        },
+    })
+
+    const type = watch("type")
 
     const [createTransaction, { loading }] = useMutation(CREATE_TRANSACTION, {
         onCompleted() {
             toast.success("Transação cadastrada com sucesso!")
             onSuccess?.()
             onOpenChange(false)
+            reset()
         },
         onError() {
             toast.error("Erro ao cadastrar transação")
         },
-        refetchQueries: ["ListTransactions"]
+        refetchQueries: ["ListTransactions"],
     })
 
     useEffect(() => {
-        if (open) {
-            setType(TransactionType.EXPENSE)
-            setDescription("")
-            setDate(undefined)
-            setValue(0)
-            setCategoryId("")
+        if (!open) {
+            reset()
         }
-    }, [open])
+    }, [open, reset])
 
-    function handleSubmit(e: React.FormEvent) {
-        e.preventDefault()
-
-
-        const isDateInvalid = date === undefined
-        const isValueInvalid = value === 0
-        const isCategoryInvalid = categoryId === ""
-
-        setDateError(isDateInvalid)
-        setValueError(isValueInvalid)
-        setCategoryError(isCategoryInvalid)
-
-        if (isDateInvalid || isValueInvalid || isCategoryInvalid) {
-            return
-        }
-
-        setDateError(false)
-        setValueError(false)
-        setCategoryError(false)
-
+    const onSubmit = (data: CreateTransactionForm) => {
         createTransaction({
             variables: {
                 data: {
-                    type,
-                    description,
-                    date,
-                    value: Number(value),
-                    categoryId,
+                    type: data.type,
+                    description: data.description,
+                    date: data.date,
+                    value: Number(data.value),
+                    categoryId: data.categoryId,
                 },
             },
         })
@@ -120,12 +122,12 @@ export function CreateTransactionDialog({
                     </div>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div className="grid grid-cols-2 gap-2">
                         <Button
                             type="button"
-                            variant='outline'
-                            onClick={() => setType(TransactionType.EXPENSE)}
+                            variant="outline"
+                            onClick={() => setValue("type", TransactionType.EXPENSE)}
                             className={`${type === TransactionType.EXPENSE
                                 ? "border-danger text-danger"
                                 : ""
@@ -137,8 +139,8 @@ export function CreateTransactionDialog({
 
                         <Button
                             type="button"
-                            variant='outline'
-                            onClick={() => setType(TransactionType.INCOME)}
+                            variant="outline"
+                            onClick={() => setValue("type", TransactionType.INCOME)}
                             className={`${type === TransactionType.INCOME
                                 ? "border-brand-base text-brand-base"
                                 : ""
@@ -149,54 +151,90 @@ export function CreateTransactionDialog({
                         </Button>
                     </div>
 
-                    <InputComponent
-                        id="description"
-                        label="Descrição"
-                        placeholder="Ex. Almoço no restaurante"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        disabled={loading}
-                    />
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <DatePicker
-                            label="Data"
-                            value={date}
-                            onChange={(d) => {
-                                setDate(d)
-                                setDateError(false)
-                            }}
-                            error={dateError}
-                        />
-
-                        <CurrencyInput
-                            id="value"
-                            label="Valor"
-                            value={value}
-                            onChange={(v) => {
-                                setValue(v)
-                                setValueError(false)
-                            }}
-                            error={valueError}
+                    <div>
+                        <InputComponent
+                            id="description"
+                            label="Descrição"
+                            placeholder="Ex. Almoço no restaurante"
                             disabled={loading}
+                            {...register("description")}
                         />
+                        {errors.description && (
+                            <span className="text-red-500 text-sm">
+                                {errors.description.message}
+                            </span>
+                        )}
                     </div>
 
-                    <SelectInput
-                        id="category"
-                        label="Categoria"
-                        value={categoryId}
-                        onChange={(value) => {
-                            setCategoryId(value)
-                            setCategoryError(false)
-                        }}
-                        error={categoryError}
-                        disabled={loading}
-                        options={categories.map((category) => ({
-                            value: category.id,
-                            label: category.title,
-                        }))}
-                    />
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Controller
+                                name="date"
+                                control={control}
+                                render={({ field }) => (
+                                    <DatePicker
+                                        label="Data"
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        error={!!errors.date}
+                                    />
+                                )}
+                            />
+                            {errors.date && (
+                                <span className="text-red-500 text-sm">
+                                    {errors.date.message}
+                                </span>
+                            )}
+                        </div>
+
+                        <div>
+                            <Controller
+                                name="value"
+                                control={control}
+                                render={({ field }) => (
+                                    <CurrencyInput
+                                        id="value"
+                                        label="Valor"
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        error={!!errors.value}
+                                        disabled={loading}
+                                    />
+                                )}
+                            />
+                            {errors.value && (
+                                <span className="text-red-500 text-sm">
+                                    {errors.value.message}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+
+                    <div>
+                        <Controller
+                            name="categoryId"
+                            control={control}
+                            render={({ field }) => (
+                                <SelectInput
+                                    id="category"
+                                    label="Categoria"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    error={!!errors.categoryId}
+                                    disabled={loading}
+                                    options={categories.map((category) => ({
+                                        value: category.id,
+                                        label: category.title,
+                                    }))}
+                                />
+                            )}
+                        />
+                        {errors.categoryId && (
+                            <span className="text-red-500 text-sm">
+                                {errors.categoryId.message}
+                            </span>
+                        )}
+                    </div>
 
                     <Button
                         type="submit"

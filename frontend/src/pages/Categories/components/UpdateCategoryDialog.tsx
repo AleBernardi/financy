@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import {
     Dialog,
     DialogContent,
@@ -31,6 +31,9 @@ import { UPDATE_CATEGORY } from "@/lib/graphql/mutations/Category"
 import { toast } from "sonner"
 import type { Category } from "@/types"
 import { Button } from "@/components/ui/button"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 interface UpdateCategoryDialogProps {
     open: boolean
@@ -78,24 +81,50 @@ const colors: CategoryColor[] = [
     { name: "yellow", color: "#CA8A04" },
 ]
 
+const updateCategorySchema = z.object({
+    title: z.string().min(1, "O título é obrigatório"),
+    description: z.string().optional(),
+    icon: z.string().min(1, "Selecione um ícone"),
+    color: z.string().min(1, "Selecione uma cor"),
+})
+
+type UpdateCategoryForm = z.infer<typeof updateCategorySchema>
+
 export function UpdateCategoryDialog({
     open,
     onOpenChange,
     category,
 }: UpdateCategoryDialogProps) {
-    const [title, setTitle] = useState("")
-    const [description, setDescription] = useState("")
-    const [icon, setIcon] = useState("")
-    const [color, setColor] = useState("")
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+        watch,
+        reset,
+    } = useForm<UpdateCategoryForm>({
+        resolver: zodResolver(updateCategorySchema),
+        defaultValues: {
+            title: "",
+            description: "",
+            icon: "",
+            color: "",
+        },
+    })
+
+    const selectedIcon = watch("icon")
+    const selectedColor = watch("color")
 
     useEffect(() => {
         if (open && category) {
-            setTitle(category.title)
-            setDescription(category.description || "")
-            setIcon(category.icon)
-            setColor(category.color)
+            reset({
+                title: category.title,
+                description: category.description || "",
+                icon: category.icon,
+                color: category.color,
+            })
         }
-    }, [open, category])
+    }, [open, category, reset])
 
     const [updateCategory, { loading }] = useMutation(UPDATE_CATEGORY, {
         onCompleted() {
@@ -105,12 +134,10 @@ export function UpdateCategoryDialog({
         onError(error) {
             toast.error(error.message || "Falha ao alterar a categoria!")
         },
-        refetchQueries: ["ListCategories"]
+        refetchQueries: ["ListCategories"],
     })
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-
+    const onSubmit = (data: UpdateCategoryForm) => {
         if (!category?.id) {
             toast.error("ID da categoria não encontrado.");
             return;
@@ -120,10 +147,10 @@ export function UpdateCategoryDialog({
             variables: {
                 id: category.id,
                 data: {
-                    title,
-                    description,
-                    icon,
-                    color,
+                    title: data.title,
+                    description: data.description,
+                    icon: data.icon,
+                    color: data.color,
                 },
             },
         })
@@ -150,22 +177,26 @@ export function UpdateCategoryDialog({
                     </div>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <InputComponent
-                        id="title"
-                        label="Título"
-                        disabled={loading}
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                    />
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    <div>
+                        <InputComponent
+                            id="title"
+                            label="Título"
+                            disabled={loading}
+                            {...register("title")}
+                        />
+                        {errors.title && (
+                            <span className="text-red-500 text-sm">
+                                {errors.title.message}
+                            </span>
+                        )}
+                    </div>
 
                     <InputComponent
                         id="description"
                         label="Descrição"
                         disabled={loading}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        {...register("description")}
                     />
 
                     <div className="space-y-2">
@@ -176,9 +207,9 @@ export function UpdateCategoryDialog({
                                     key={name}
                                     type="button"
                                     disabled={loading}
-                                    onClick={() => setIcon(name)}
+                                    onClick={() => setValue("icon", name, { shouldValidate: true })}
                                     className={`flex h-[42px] w-[42px] items-center justify-center rounded-md border transition
-                                        ${icon === name
+                                        ${selectedIcon === name
                                             ? "border-green-600 bg-green-50"
                                             : "border-gray-200 hover:bg-gray-100"
                                         }`}
@@ -187,6 +218,11 @@ export function UpdateCategoryDialog({
                                 </button>
                             ))}
                         </div>
+                        {errors.icon && (
+                            <span className="text-red-500 text-sm">
+                                {errors.icon.message}
+                            </span>
+                        )}
                     </div>
 
                     <div className="space-y-2">
@@ -197,9 +233,9 @@ export function UpdateCategoryDialog({
                                     key={name}
                                     type="button"
                                     disabled={loading}
-                                    onClick={() => setColor(name)}
+                                    onClick={() => setValue("color", name, { shouldValidate: true })}
                                     className={`h-[30px] w-[50px] rounded-md border transition
-                                        ${color === name
+                                        ${selectedColor === name
                                             ? "border-green-600 bg-green-50"
                                             : "border-gray-200 hover:bg-gray-100"
                                         }`}
@@ -213,6 +249,11 @@ export function UpdateCategoryDialog({
                                 </button>
                             ))}
                         </div>
+                        {errors.color && (
+                            <span className="text-red-500 text-sm">
+                                {errors.color.message}
+                            </span>
+                        )}
                     </div>
 
                     <button

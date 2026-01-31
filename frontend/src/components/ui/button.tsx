@@ -16,6 +16,7 @@ const buttonVariants = cva(
         danger:
           "border border-input text-danger shadow-sm bg-background hover:bg-gray-300",
         link: "text-brand-base underline-offset-4 hover:underline",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
       },
       size: {
         default: "px-4 py-3",
