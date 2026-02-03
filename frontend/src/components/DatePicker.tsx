@@ -32,14 +32,12 @@ export function DatePicker({
     const [open, setOpen] = React.useState(false)
     const [viewDate, setViewDate] = React.useState(value || new Date())
 
-    // Update viewDate when value changes
     React.useEffect(() => {
         if (value) {
             setViewDate(value)
         }
     }, [value])
 
-    // Define o formato de exibição
     const displayFormat = formatType === "month" ? "MMMM 'de' yyyy" : "dd/MM/yyyy"
 
     const handleMonthSelect = (monthIndex: number) => {
