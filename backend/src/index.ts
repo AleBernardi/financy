@@ -16,7 +16,7 @@ async function main() {
 
     app.use(
         cors({
-            origin: process.env.FRONTEND_UTL,
+            origin: process.env.FRONTEND_URL,
             credentials: true,
         })
     )
@@ -26,7 +26,7 @@ async function main() {
         validate: false,
         emitSchemaFile: './schema.graphql'
     })
-    
+
     const server = new ApolloServer({
         schema
     })

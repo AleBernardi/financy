@@ -79,77 +79,74 @@ export function Profile() {
         <div className="flex flex-col min-h-[calc(100vh-10rem)] items-center justify-center">
             <Card className="w-full max-w-md rounded-xl p-8 shadow-sm border-1">
                 <CardContent>
-                    <div className="flex flex-col gap-6">
-                        <div className="flex flex-col gap-6 items-center">
-                            <div>
-                                <Avatar className="h-16 w-16 gray-300 border-1 border-white shadow-sm">
-                                    <AvatarFallback className="text-xl font-medium text-gray-700">
-                                        {user?.name ? getInitials(user.name) : ""}
-                                    </AvatarFallback>
-                                </Avatar>
-                            </div>
-                            <div className="flex flex-col items-center">
-                                <Label className="text-xl font-bold text-gray-700">
-                                    {user?.name || "Usuário"}
-                                </Label>
-                                <Label className="text-sm text-muted-foreground">{user?.email}</Label>
-                            </div>
-                        </div>
-                        <div></div>
-                        <div>
-                            <form onSubmit={handleSubmit(onSubmit)}>
-                                <div className="flex flex-col gap-4">
-                                    <div>
-                                        <InputComponent
-                                            id="name"
-                                            type="text"
-                                            placeholder="Seu nome completo"
-                                            {...register("name")}
-                                            icon={UserRound}
-                                            label="Nome completo"
-                                        />
-                                        {errors.name && (
-                                            <span className="text-red-500 text-sm">
-                                                {errors.name.message}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <InputComponent
-                                            id="email"
-                                            type="email"
-                                            value={user?.email || ""}
-                                            disabled
-                                            icon={Mail}
-                                            label="E-mail"
-                                            className="bg-slate-50 opacity-70 cursor-not-allowed"
-                                        />
-                                        <span className="text-xs text-muted-foreground">Opcional</span>
-                                    </div>
-                                    <div>
-                                        <Button
-                                            type="submit"
-                                            className="w-full"
-                                            disabled={loading}
-                                        >
-                                            Salvar alterações
-                                        </Button>
-                                    </div>
-                                    <div>
-                                        <Button
-                                            variant="outline"
-                                            className="w-full flex items-center justify-center gap-2 "
-                                            onClick={logout}
-                                            type="button"
-                                        >
-                                            <LogOut className="h-4 w-4" />
-                                            Sair da conta
-                                        </Button>
-                                    </div>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="flex flex-col gap-6">
+                            <div className="flex flex-col gap-6 items-center">
+                                <div>
+                                    <Avatar className="h-16 w-16 gray-300 border-1 border-white shadow-sm">
+                                        <AvatarFallback className="text-xl font-medium text-gray-700">
+                                            {user?.name ? getInitials(user.name) : ""}
+                                        </AvatarFallback>
+                                    </Avatar>
                                 </div>
-                            </form>
+                                <div className="flex flex-col items-center">
+                                    <Label className="text-xl font-bold text-gray-700">
+                                        {user?.name || "Usuário"}
+                                    </Label>
+                                    <Label className="text-sm text-muted-foreground">{user?.email}</Label>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-4">
+                                <div>
+                                    <InputComponent
+                                        id="name"
+                                        type="text"
+                                        placeholder="Seu nome completo"
+                                        {...register("name")}
+                                        icon={UserRound}
+                                        label="Nome completo"
+                                    />
+                                    {errors.name && (
+                                        <span className="text-danger text-sm">
+                                            {errors.name.message}
+                                        </span>
+                                    )}
+                                </div>
+                                <div>
+                                    <InputComponent
+                                        id="email"
+                                        type="email"
+                                        value={user?.email || ""}
+                                        disabled
+                                        icon={Mail}
+                                        label="E-mail"
+                                        className="bg-slate-50 opacity-70 cursor-not-allowed"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-4">
+                                <Button
+                                    type="submit"
+                                    className="w-full"
+                                    disabled={loading}
+                                >
+                                    Salvar alterações
+                                </Button>
+
+                                <Button
+                                    variant="outline"
+                                    className="w-full flex items-center justify-center gap-2"
+                                    onClick={logout}
+                                    type="button"
+                                >
+                                    <LogOut className="h-4 w-4 text-danger" />
+                                    Sair da conta
+                                </Button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </CardContent>
             </Card>
         </div>

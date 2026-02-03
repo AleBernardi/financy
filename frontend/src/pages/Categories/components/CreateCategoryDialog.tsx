@@ -121,6 +121,7 @@ export function CreateCategoryDialog({
         onError() {
             toast.error("Falha ao cadastrar a categoria!")
         },
+        refetchQueries: ["ListCategories"],
     })
 
     useEffect(() => {

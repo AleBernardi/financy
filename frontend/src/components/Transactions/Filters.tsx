@@ -56,8 +56,21 @@ export function Filters<TData>({ table }: TableFiltersProps<TData>) {
             <div className="flex flex-col w-full">
                 <DatePicker
                     label="Mês / Ano"
-                    value={table.getColumn("date")?.getFilterValue() as Date | undefined}
-                    onChange={(date) => table.getColumn("date")?.setFilterValue(date)}
+                    value={(() => {
+                        const val = table.getColumn("date")?.getFilterValue() as string;
+                        if (!val) return undefined;
+                        const [year, month] = val.split("-");
+                        return new Date(parseInt(year), parseInt(month) - 1, 1);
+                    })()}
+                    onChange={(date) => {
+                        if (!date) {
+                            table.getColumn("date")?.setFilterValue(undefined);
+                            return;
+                        }
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, "0");
+                        table.getColumn("date")?.setFilterValue(`${year}-${month}`);
+                    }}
                     formatType="month" // Exibe apenas Mês e Ano no botão
                     placeholder="Todos os meses"
                 />
