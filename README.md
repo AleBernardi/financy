@@ -29,8 +29,8 @@ Desafio Prático da Fase 3 da Pós Tech Developer 360 na FTR.
 
 # Tutorial para a incialização
 - Clone o repositório.
-- Gere uma chave para o jwt e adicione essa chave no arquivo .env na pasta backend na variável JWT_SECRET.
 - Rode o comando `docker-compose build` para construir as imagens.
+- Gere uma chave para o jwt e adicione essa chave no arquivo .env na pasta backend na variável JWT_SECRET.
 - Rode o comando `docker-compose up -d` para iniciar o banco de dados.
 
 # Links úteis
