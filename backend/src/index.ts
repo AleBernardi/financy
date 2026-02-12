@@ -1,4 +1,5 @@
 import 'reflect-metadata'
+import dotenv from 'dotenv';
 import "./graphql/registers/typeEnum.register";
 import express from 'express'
 import cors from 'cors'
@@ -14,9 +15,11 @@ import { TransactionResolver } from './resolvers/transaction.resolver'
 async function main() {
     const app = express()
 
+    dotenv.config();
+
     app.use(
         cors({
-            origin: process.env.FRONTEND_URL,
+            origin: [process.env.FRONTEND_URL, "https://studio.apollographql.com"],
             credentials: true,
         })
     )
