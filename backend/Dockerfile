@@ -5,8 +5,6 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-COPY .env.example .env
-
 RUN npm install
 
 RUN npx prisma generate

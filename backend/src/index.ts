@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-import dotenv from 'dotenv';
 import "./graphql/registers/typeEnum.register";
 import express from 'express'
 import cors from 'cors'
@@ -14,8 +13,6 @@ import { TransactionResolver } from './resolvers/transaction.resolver'
 
 async function main() {
     const app = express()
-
-    dotenv.config();
 
     app.use(
         cors({
